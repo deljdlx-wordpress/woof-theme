@@ -1,0 +1,13 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Woof\\Theme\\": "./class/Theme"
+        }
+    },
+    "require": {
+
+    },
+    "config": {
+        "vendor-dir": "static-vendor"
+    }
+}
