@@ -2,17 +2,37 @@
 namespace Woof\Theme;
 
 
+use Woof\View\View;
 use Woof\Theme\Customizer\Section;
 use Woof\Theme\Customizer\ThemeParameter;
 
-use function Woof\slugify;
 
-class Skeleton
+
+class Theme
 {
-    protected $css = [];
+    public const WOOF_THEME_KEY = 'WOOF_THEME';
 
+
+    protected $css = [];
+    protected $scripts = [];
+    /**
+     * @var View
+     */
     protected $view;
+
+
+    /**
+     * @var View[]
+     */
+    protected $views = [];
+
     protected $model;
+
+
+
+
+
+
 
     // https://developer.wordpress.org/reference/functions/add_theme_support/
     protected $features = [
@@ -30,107 +50,49 @@ class Skeleton
     //===========================================================
     //
     //===========================================================
-    public static function getInstance()
+    public static function getInstance($instanceName = null)
     {
-        return $GLOBALS['WOOF_THEME'];
+        if($instanceName === null) {
+            $instanceName = static::WOOF_THEME_KEY;
+        }
+        if(!array_key_exists($instanceName, $GLOBALS)) {
+            $GLOBALS[$instanceName] = new static;
+        }
+        return $GLOBALS[$instanceName];
     }
 
     public function __construct()
     {
-        $this->view = new Template();
+        $this->view = new View($this);
         $this->model = new Loop();
     }
 
-    public function getView() {
-        return $this->view;
+    public function getView($viewFile = null) {
+        if($viewFile === null) {
+            return $this->view;
+        }
+        else {
+            if(!array_key_exists($viewFile, $this->views)) {
+                $this->views[$viewFile] = new View($this, $viewFile);
+            }
+            return $this->views[$viewFile];
+        }
+
+
     }
 
     public function getModel() {
         return $this->model;
     }
 
-    public function partial($slug, $name = null, $data = [])
+
+    public function register($instanceName = null)
     {
-        if($name === null) {
-            $name = slugify($slug);
+        if($instanceName === null) {
+            $instanceName = static::WOOF_THEME_KEY;
         }
 
-        // source file : public\wp\wp-includes\general-template.php
-        do_action( "get_template_part_{$slug}", $slug, $name, $data );
-
-        $templates = array();
-        $name      = (string) $name;
-        if ( '' !== $name ) {
-            $templates[] = "{$slug}-{$name}.php";
-        }
-
-        $templates[] = "{$slug}.php";
-        do_action( 'get_template_part', $slug, $name, $templates, $data );
-
-        $template = $this->locateTemplate( $templates, true, false, $data );
-
-        if($template) {
-            $this->loadTemplate($template);
-            return $template;
-        }
-        else {
-            return false;
-        }
-    }
-
-    public function locateTemplate($template_names, $load = false, $require_once = true, $data = array())
-    {
-        $located = '';
-        foreach ( (array) $template_names as $template_name ) {
-            if ( ! $template_name ) {
-                continue;
-            }
-            if ( file_exists( STYLESHEETPATH . '/' . $template_name ) ) {
-                $located = STYLESHEETPATH . '/' . $template_name;
-                break;
-            } elseif ( file_exists( TEMPLATEPATH . '/' . $template_name ) ) {
-                $located = TEMPLATEPATH . '/' . $template_name;
-                break;
-            } elseif ( file_exists( ABSPATH . WPINC . '/theme-compat/' . $template_name ) ) {
-                $located = ABSPATH . WPINC . '/theme-compat/' . $template_name;
-                break;
-            }
-        }
-        return $located;
-    }
-
-    public function loadTemplate($_template_file, $require_once = true, $data = array(), $extract = true)
-    {
-        // source file : public\wp\wp-includes\general-template.php
-        global $posts, $post, $wp_did_header, $wp_query, $wp_rewrite, $wpdb, $wp_version, $wp, $id, $comment, $user_ID;
-
-        if(!array_key_exists('theme', $data)) {
-            $data['theme'] = $this;
-        }
-
-        if ( is_array( $wp_query->query_vars ) ) {
-            extract( $wp_query->query_vars, EXTR_SKIP );
-        }
-
-        if ( isset( $s ) ) {
-            $s = esc_attr( $s );
-        }
-
-        if($extract) {
-            extract($data);
-        }
-
-        if ( $require_once ) {
-            require_once $_template_file;
-        } else {
-            require $_template_file;
-        }
-    }
-
-
-    public function register()
-    {
-        $GLOBALS['WOOF_THEME'] = $this;
+        $GLOBALS[$instanceName] = $this;
 
         $this->enableFeatures();
         $this->registerParameters();
@@ -189,7 +151,6 @@ class Skeleton
     public function registerParameters()
     {
 
-
         foreach($this->parameters as $paramenterName => $descriptor) {
             $parameter = new ThemeParameter($paramenterName, $descriptor['defaultValue']);
             $this->parameters[$paramenterName]['instance'] = $parameter;
@@ -218,6 +179,14 @@ class Skeleton
 
     protected function registerScript($name, $path, $dependencies = [], $version = null, $inFooter = true)
     {
+        $this->scripts[] = [
+            $name,
+            get_theme_file_uri($path),
+            $dependencies,
+            $version,
+            $inFooter
+        ];
+
         wp_enqueue_script(
             $name,
             get_theme_file_uri($path),
@@ -225,12 +194,23 @@ class Skeleton
             $version,
             $inFooter
         );
+
+        return $this;
     }
 
 
 
     protected function registerCSS($name, $path, $dependencies = [], $version = '1')
     {
+
+        $this->css[] = [
+            $name,
+            get_theme_file_uri($path),
+            $dependencies,
+            $version
+        ];
+
+
         wp_enqueue_style(
             $name,
             get_theme_file_uri($path),
