@@ -1,0 +1,45 @@
+.customizer {
+  border: solid 1px #aaa;
+  padding: 8px;
+  background-color: #fff;
+}
+
+
+
+.customizer input {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  background-color: transparent;
+}
+.customizer input:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+
+/*
+input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select, textarea
+*/
+
+
+.v-application--wrap {
+  height: auto !important;
+  min-height: auto !important;
+}
+
+
+
+.vue-slider-ui-container .v-application {
+  padding-top: 4rem;
+}
+
+.vue-slider-ui-container .min-value,
+.vue-slider-ui-container .max-value {
+  display: none;
+}
+
+.customizer .parameter {
+  display: none;
+}

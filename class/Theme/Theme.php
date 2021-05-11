@@ -6,8 +6,6 @@ use Woof\View\View;
 use Woof\Theme\Customizer\Section;
 use Woof\Theme\Customizer\ThemeParameter;
 
-
-
 class Theme
 {
     public const WOOF_THEME_KEY = 'WOOF_THEME';
@@ -27,10 +25,6 @@ class Theme
     protected $views = [];
 
     protected $model;
-
-
-
-
 
 
 
@@ -134,20 +128,6 @@ class Theme
         return $this;
     }
 
-    public function getParameters()
-    {
-        $parameters = [];
-        foreach($this->parameters as $index => $descriptor) {
-            $parameters[$index] = $descriptor['instance'];
-        }
-        return $parameters;
-    }
-
-    public function getParameter($name)
-    {
-        return $this->parameters[$name]['instance'];
-    }
-
     public function registerParameters()
     {
 
@@ -162,17 +142,38 @@ class Theme
 
     protected function registerCustomizers()
     {
-        foreach($this->customizers as $parameterName => $descriptor) {
-            $control = $descriptor['type'];
-            $customizer = new $control(
-                $this->parameters[$parameterName]['instance'],
-                $descriptor['caption'],
-                isset($descriptor['partialSelector']) ? $descriptor['partialSelector'] : null
-            );
-            $customizer->setSection($this->customizerSections[$descriptor['section']]['instance']);
-            $customizer->register();
+
+        foreach($this->parameters as $parameterName => $descriptor) {
+
+
+            if(isset($descriptor['type'])) {
+                $control = $descriptor['type'];
+                $customizer = new $control(
+                    $this->parameters[$parameterName]['instance'],
+                    $descriptor['caption'],
+                    $descriptor,
+                    isset($descriptor['partialSelector']) ? $descriptor['partialSelector'] : null,
+                );
+
+                $customizer->setSection($this->customizerSections[$descriptor['section']]['instance']);
+                $customizer->register();
+            }
         }
         return $this;
+    }
+
+    public function getParameters()
+    {
+        $parameters = [];
+        foreach($this->parameters as $index => $descriptor) {
+            $parameters[$index] = $descriptor['instance'];
+        }
+        return $parameters;
+    }
+
+    public function getParameter($name)
+    {
+        return $this->parameters[$name]['instance'];
     }
 
 

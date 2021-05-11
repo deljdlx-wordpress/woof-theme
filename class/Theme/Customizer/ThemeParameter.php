@@ -8,6 +8,10 @@ class ThemeParameter
     protected $defaultValue;
     protected $value;
 
+
+    protected $customizer;
+
+
     public function __construct($name, $defaultValue = '')
     {
         $this->name = $name;

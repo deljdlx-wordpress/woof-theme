@@ -35,10 +35,15 @@ class Customizer
     protected $partialEditSelector = '';
     protected $previewUpdateCode = '';
 
-    public function __construct(ThemeParameter $parameter, $caption = null, $partialSelector = null)
+
+    protected $descriptor = [];
+
+    public function __construct(ThemeParameter $parameter, $caption = null, $descriptor = [], $partialSelector = null)
     {
 
         $this->parameter = $parameter;
+
+        $this->descriptor = $descriptor;
 
         $this->partialEditSelector = $partialSelector;
 
@@ -175,16 +180,24 @@ class Customizer
 
     protected function registerControl()
     {
+
+        $options = [
+            'label' => __($this->getCaption()), //Admin-visible name of the control
+            'settings' => $this->parameter->getName(), //Which setting to load and manipulate (serialized is okay)
+            'priority' => 10, //Determines the order this control appears in for the specified section
+            'section' => $this->getSection()->getId(), //ID of the section this control should render in (can be one of yours, or a WordPress default section)
+        ];
+
+        if(isset($this->descriptor['parameters'])) {
+            $options = array_merge($options, $this->descriptor['parameters']);
+        }
+
+
         //$this->customizer->add_control(new \WP_Customize_Code_Editor_Control( //Instantiate the color control class
         $this->customizer->add_control(new $this->type( //Instantiate the color control class
             $this->customizer, //Pass the $wp_customize object (required)
             $this->parameter->getName(), //Set a unique ID for the control
-            [
-                'label' => __($this->getCaption()), //Admin-visible name of the control
-                'settings' => $this->parameter->getName(), //Which setting to load and manipulate (serialized is okay)
-                'priority' => 10, //Determines the order this control appears in for the specified section
-                'section' => $this->getSection()->getId(), //ID of the section this control should render in (can be one of yours, or a WordPress default section)
-            ]
+            $options
         ));
     }
 

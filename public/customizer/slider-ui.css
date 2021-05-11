@@ -1,0 +1,22 @@
+.slider-ui-container .slider {
+  margin-right: 1.5rem;
+  margin-left: .2rem;
+  margin-top: .5rem;
+}
+
+
+.slider-ui-container .ui-slider-handle {
+  height: 1.6em;
+  top: 50%;
+  margin-top: -.9em;
+  text-align: center;
+  line-height: 1.6em;
+  font-size: 1em;
+  padding: 4px;
+  width: auto;
+}
+
+.slider-ui-container .min-value,
+.slider-ui-container .max-value {
+  display: none;
+}
