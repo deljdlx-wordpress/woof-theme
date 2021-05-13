@@ -33,9 +33,25 @@ class Standard extends WP_Customize_Control
     {
         parent::enqueue();
 
+
         $this->addCSS(
             'jquery-ui',
             'public/jquery-ui/jquery-ui.css'
+        );
+        $this->addCSS(
+            'jquery-ui-theme',
+            'public/jquery-ui/jquery-ui.theme.css'
+        );
+
+
+        $this->addScript(
+            'postSelector-vendor',
+            'public/vue/_build/js/chunk-vendors.js',
+        );
+
+        $this->addScript(
+            'postSelector-app',
+            'public/vue/_build/js/app.js',
         );
 
 
@@ -44,6 +60,7 @@ class Standard extends WP_Customize_Control
             'vuejs-vendors.css',
             'public/vue/_common/css/chunk-vendors.css'
         );
+
 
         $this->addCSS(
             'vuejs-override.css',

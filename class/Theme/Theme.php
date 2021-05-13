@@ -144,8 +144,6 @@ class Theme
     {
 
         foreach($this->parameters as $parameterName => $descriptor) {
-
-
             if(isset($descriptor['type'])) {
                 $control = $descriptor['type'];
                 $customizer = new $control(

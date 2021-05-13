@@ -7,7 +7,7 @@ use Woof\WPModels\Post;
 class PostSelector extends Standard
 {
 
-    public $type = 'post-selector-ui';
+    public $type = 'post-selector';
 
     // protected $posts;
 
@@ -29,15 +29,6 @@ class PostSelector extends Standard
 
 
 
-        $this->addScript(
-            'postSelector-vendor',
-            'public/vue/postSelector/js/chunk-vendors.js',
-        );
-
-        $this->addScript(
-            'postSelector-app',
-            'public/vue/postSelector/js/app.js',
-        );
 
     }
 
@@ -49,11 +40,11 @@ class PostSelector extends Standard
             '<label class="postSelector-ui-container">
                 <span class="customize-control-title">' . esc_html($this->label) . '</span>
 
-                <div class="container"></div>
+                <div class="vue-container" data-type="' . $this->type . '"></div>
 
-                <input class="api-url parameter" value="' . get_home_url() . '/wp-json/wp/v2'. '"/>
+                <input class="api-url parameter" data-parameter-name="apiURL" value="' . get_home_url() . '/wp-json/wp/v2'. '"/>
+                <input class="postType parameter" data-parameter-name="postType" value="' . $this->postType . '"/>
 
-                <input class="postType parameter" value="' . $this->postType . '"/>
             </label>
         </div>';
 

@@ -7,7 +7,7 @@
           let control = this;
           let picker = this.container.find('.slider');
 
-          let preview = this.container.find('.ui-slider-handle');
+          let preview = this.container.find('.ui-slider-handle .value span');
 
           let min = this.container.find('.min-value').val();
           let max = this.container.find('.max-value').val();
@@ -16,6 +16,7 @@
           console.log(min, max)
 
           picker.slider({
+            range: "min",
             value: control.setting.get(),
             min: Number(min),
             max: Number(max),
@@ -36,7 +37,7 @@
       }
   });
 
-  api.controlConstructor['slider-ui'] = api.SliderControl;
+  api.controlConstructor['slider-jquery'] = api.SliderControl;
 
 })(jQuery);
 

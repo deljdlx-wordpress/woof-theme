@@ -55,12 +55,13 @@ export default {
   name: 'Calendar',
 
   created() {
-
-    this.value = this.$customizerData.value;
-    this.locale = this.$customizerData.locale;
+    this.value = this.customizerData.data.value;
+    this.locale = this.customizerData.data.locale;
 
   },
-
+  props: [
+    'customizerData'
+  ],
   data() {
     return {
       menu: false,
@@ -74,7 +75,7 @@ export default {
 
       this.menu = false;
       this.$refs.menu.save(this.value);
-      this.$customizerControl.setting.set(this.value);
+      this.customizerData.control.setting.set(this.value);
     }
   }
 

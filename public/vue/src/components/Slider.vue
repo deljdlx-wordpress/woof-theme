@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+
       <v-slider
         v-model="value"
         :label="caption"
@@ -9,7 +9,8 @@
         :min="min"
         :max="max"
       ></v-slider>
-  </v-app>
+
+
 </template>
 
 <script>
@@ -20,14 +21,16 @@ export default {
   name: 'Slider',
 
   created() {
+    this.value = this.customizerData.data.value;
+    this.min = this.customizerData.data.min;
+    this.max = this.customizerData.data.max;
 
-    // console.log('%c' + 'Slidercreated', 'color: #0bf; font-size: 1rem; background-color:#fff');
-    // console.log(this.$customizerData);
-
-    this.value = this.$customizerData.value;
-    this.min = this.$customizerData.min;
-    this.max = this.$customizerData.max;
   },
+
+  props: [
+    'customizerData'
+  ],
+
 
   data() {
     return {
@@ -41,8 +44,7 @@ export default {
 
   methods: {
     update(value) {
-      console.log(value);
-      this.$customizerControl.setting.set(value);
+      this.customizerData.control.setting.set(value);
     }
   }
 

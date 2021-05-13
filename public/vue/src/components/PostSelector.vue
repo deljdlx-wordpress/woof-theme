@@ -1,25 +1,28 @@
 <template>
-  <v-app>
-    <v-autocomplete
-      clearable
-      :items="posts"
-      item-text="title.rendered"
-      item-value="id"
+    <div>
 
-      :loading="loading"
-      cache-items
-      hide-no-data
-      hide-details
-      filled
+      <v-autocomplete
+        dense
+        clearable
+        :items="posts"
+        item-text="title.rendered"
+        item-value="id"
+
+        :loading="loading"
+        cache-items
+        hide-no-data
+        hide-details
+        filled
 
 
-      v-model="value"
+        v-model="value"
 
-      :search-input.sync="search"
+        :search-input.sync="search"
+        @change="update"
+        @click:clear="update"
+      ></v-autocomplete>
 
-      @change="update"
-    ></v-autocomplete>
-  </v-app>
+    </div>
 </template>
 
 <script>
@@ -30,18 +33,25 @@ export default {
 
   created() {
 
-    this.value = this.$customizerData.value;
-    this.apiURL = this.$customizerData.apiURL;
-    this.postType = this.$customizerData.postType;
+    this.value = this.customizerData.data.value;
+    this.apiURL = this.customizerData.data.apiURL;
+    this.postType = this.customizerData.data.postType;
 
+    if(this.value) {
       this.$axios.get(
         this.apiURL + '/' + this.postType + '/' + this.value +'?_embed=1'
       ).then(response => {
         this.posts = [response.data];
       });
+    }
 
+    this.querySelections('');
 
   },
+
+  props: [
+    'customizerData'
+  ],
 
 
   data() {
@@ -93,7 +103,7 @@ export default {
 
 
     update(value) {
-      this.$customizerControl.setting.set(value);
+      this.customizerData.control.setting.set(value);
     }
   }
 

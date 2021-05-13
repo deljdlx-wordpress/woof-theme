@@ -1,7 +1,9 @@
 module.exports = {
   filenameHashing: false,
-  outputDir: 'postSelector',
+  outputDir: './_build',
   publicPath: './',
+
+  runtimeCompiler: true,
 
   /*
   configureWebpack: config => {

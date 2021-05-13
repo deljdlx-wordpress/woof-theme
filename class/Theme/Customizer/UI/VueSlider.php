@@ -7,7 +7,7 @@ namespace Woof\Theme\Customizer\UI;
 class VueSlider extends Standard
 {
 
-    public $type = 'vue-slider-ui';
+    public $type = 'slider';
 
 
 
@@ -32,16 +32,6 @@ class VueSlider extends Standard
         parent::enqueue();
 
 
-        $this->addScript(
-            'slider-vendor',
-            'public/vue/slider/js/chunk-vendors.js',
-        );
-
-        $this->addScript(
-            'slider-app',
-            'public/vue/slider/js/app.js',
-        );
-
     }
 
     public function render_content()
@@ -52,10 +42,10 @@ class VueSlider extends Standard
             '<label class="vue-slider-ui-container">
                 <span class="customize-control-title">' . esc_html($this->label) . '</span>
 
-                <div class="container"></div>
+                <div class="vue-container" data-type="' . $this->type . '"></div>
 
-                <input class="min-value" value="' . $this->min . '"/>
-                <input class="max-value" value="' . $this->max . '"/>
+                <input class="min-value parameter" data-parameter-name="min" value="' . $this->min . '"/>
+                <input class="max-value parameter" data-parameter-name="max" value="' . $this->max . '"/>
 
             </label>
         </div>';

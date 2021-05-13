@@ -176,6 +176,8 @@ class Customizer
                 'transport' => 'postMessage', //What triggers a refresh of the setting? 'refresh' or 'postMessage' (instant)?
             ]
         );
+
+        return $this;
     }
 
     protected function registerControl()
@@ -199,6 +201,8 @@ class Customizer
             $this->parameter->getName(), //Set a unique ID for the control
             $options
         ));
+
+        return $this;
     }
 
     /**

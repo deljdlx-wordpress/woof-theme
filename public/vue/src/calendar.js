@@ -20,8 +20,6 @@ Vue.config.productionTip = false;
   api.CalendarControl = api.Control.extend({
       ready: function() {
 
-          console.log('Starting')
-
           let control = this;
 
 
