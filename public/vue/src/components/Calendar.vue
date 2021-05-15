@@ -78,8 +78,5 @@ export default {
       this.customizerData.control.setting.set(this.value);
     }
   }
-
-
-
 };
 </script>

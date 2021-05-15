@@ -1,7 +1,7 @@
 <?php
 namespace Woof\Theme;
 
-use Woof\WPModels\Post;
+use Woof\Model\Wordpress\Post;
 
 class Loop
 {
@@ -17,7 +17,7 @@ class Loop
                 the_post();
                 $wpPost = get_post();
                 $post = new Post();
-                $post->loadFromWordpressPost($wpPost);
+                $post->loadFromWordpress($wpPost);
                 $posts[] = $post;
 
             }
