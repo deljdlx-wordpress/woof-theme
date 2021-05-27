@@ -57,7 +57,8 @@ class Theme
 
     public function __construct()
     {
-        $this->view = new View($this);
+        $this->view = new View();
+        $this->view->set('theme', $this);
         $this->model = new Loop();
     }
 
@@ -67,12 +68,12 @@ class Theme
         }
         else {
             if(!array_key_exists($viewFile, $this->views)) {
-                $this->views[$viewFile] = new View($this, $viewFile);
+                 $view = new View($viewFile);
+                 $view->set('theme', $this);
+                 $this->views[$viewFile] = $view;
             }
             return $this->views[$viewFile];
         }
-
-
     }
 
     public function getModel() {
